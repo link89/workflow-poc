@@ -32,7 +32,7 @@ def add_xyz_to_data_set(in_files: Union[str, list], data_set_dir: str, atoms_kin
             except FileExistsError as e:
                 pass
         convert_xyz_to_training_data(file_path, data_set_path, atoms_kind)
-        print('convert {} to training data {} successfully!'.format(
+        print('convert and add {} to training data set {} successfully!'.format(
             file_path, data_set_path))
 
 
