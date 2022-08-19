@@ -7,7 +7,7 @@ import itertools
 
 
 
-def add_xyz_file_to_data_set(in_file: str, out_dir: str, set_id: int = None, atoms_kind=0):
+def add_xyz_to_data_set(in_file: str, out_dir: str, set_id: int = None, atoms_kind=0):
 
     ats = read(in_file, ':')
     force = np.array([np.ravel(at.get_forces()) for at in ats])
