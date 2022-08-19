@@ -1,3 +1,4 @@
-pip-chill==1.0.1
-python-fire==0.1.0
+fire
+wheel
+# install dpgen from source
 -e git+https://github.com/deepmodeling/dpgen.git@8dea29ef125f66be9641afe5ac4970433a9c9ce1#egg=dpgen
