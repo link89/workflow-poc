@@ -1,11 +1,12 @@
+from audioop import add
 from fire import Fire
 import os
 from ase.io import read
 import numpy as np
+import itertools
 
 
-def xyz_to_dp_train_data(in_file: str, output_dir: str, atoms_kind=0):
-    os.makedirs(output_dir, exist_ok=True)
+def add_xyz_to_training_data_set(in_file: str, out_dir: str, set_id: int = None, atoms_kind=0):
     ats = read(in_file, ':')
 
     force = np.array([np.ravel(at.get_forces()) for at in ats])
@@ -20,18 +21,29 @@ def xyz_to_dp_train_data(in_file: str, output_dir: str, atoms_kind=0):
     sym_dict = dict(zip(symbol_set, range(len(symbol_set))))
     type_raw = [str(sym_dict[specie])
                 for specie in ats[0].get_chemical_symbols()]
-
-    for name, data in [('force', force), ('energy', energy), ('coord', coord), ('box', box)]:
+        
+    train_data_set_path = None
+    
+    for idx in (itertools.count(start=0, step=1) if set_id is None else [set_id]):
+        set_name = 'set.{}'.format(str(idx).zfill(3))
+        train_data_set_path = os.path.join(out_dir, set_name)
+        try:
+            os.makedirs(train_data_set_path, exist_ok=False)
+            break
+        except FileExistsError as e :
+            if set_id is not None:
+                raise
+    
+    for name, data in (('force', force), ('energy', energy), ('coord', coord), ('box', box)):
         out_file = '{}.npy'.format(name)
-        out_file_path = os.path.join(output_dir, out_file)
+        out_file_path = os.path.join(train_data_set_path, out_file)
         np.save(out_file_path, data)
 
-    raw_file_path = os.path.join(output_dir, 'type.raw')
+    raw_file_path = os.path.join(out_dir, 'type.raw')
     with open(raw_file_path, 'w') as f:
         f.write(' '.join(type_raw))
 
-
 if __name__ == '__main__':
     Fire(dict(
-        xyz_to_dp_train_data=xyz_to_dp_train_data,
+        add_xyz_to_training_data_set=add_xyz_to_training_data_set,
     ))
