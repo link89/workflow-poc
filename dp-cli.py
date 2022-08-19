@@ -24,6 +24,7 @@ def add_xyz_to_training_data_set(in_file: str, out_dir: str, set_id: int = None,
         
     train_data_set_path = None
     
+    # Find a free slot to add new training data
     for idx in (itertools.count(start=0, step=1) if set_id is None else [set_id]):
         set_name = 'set.{}'.format(str(idx).zfill(3))
         train_data_set_path = os.path.join(out_dir, set_name)
