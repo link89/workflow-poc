@@ -6,7 +6,8 @@ import numpy as np
 import itertools
 
 
-def add_xyz_to_data_set(in_file: str, out_dir: str, set_id: int = None, atoms_kind=0):
+
+def add_xyz_file_to_data_set(in_file: str, out_dir: str, set_id: int = None, atoms_kind=0):
 
     ats = read(in_file, ':')
     force = np.array([np.ravel(at.get_forces()) for at in ats])
@@ -40,7 +41,7 @@ def add_xyz_to_data_set(in_file: str, out_dir: str, set_id: int = None, atoms_ki
         out_file_path = os.path.join(data_set_path, out_file)
         np.save(out_file_path, data)
 
-    raw_file_path = os.path.join(out_dir, 'type.raw')
+    raw_file_path = os.path.join(data_set_path, 'type.raw')
     with open(raw_file_path, 'w') as f:
         f.write(' '.join(type_raw))
 
