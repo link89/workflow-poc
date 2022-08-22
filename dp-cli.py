@@ -1,14 +1,22 @@
-from audioop import add
 from fire import Fire
 import os
-from ase.io import read
+from ase.io import read, write
 import numpy as np
 import itertools
 from typing import Union
 from glob import glob
+import random as r
 
 
-def add_xyz_to_data_set(in_files: Union[str, list], data_set_dir: str, atoms_kind=0):
+def convert_xyz_to_sys_data(in_file: str, out_dir: str):
+    atoms = read(in_file, "::")
+    atoms = r.sample(atoms, 20)
+    for i, atom in enumerate(atoms):
+        out_file = os.path.join(out_dir, "POSCAR%03d" % i)
+        write(out_file, atom, sort=True)
+
+
+def add_xyz_to_init_data(in_files: Union[str, list], data_set_dir: str, atoms_kind=0):
 
     if isinstance(in_files, str):
         in_files = [in_files]
@@ -31,12 +39,12 @@ def add_xyz_to_data_set(in_files: Union[str, list], data_set_dir: str, atoms_kin
                 break
             except FileExistsError as e:
                 pass
-        convert_xyz_to_training_data(file_path, data_set_path, atoms_kind)
+        convert_xyz_to_init_data(file_path, data_set_path, atoms_kind)
         print('convert and add {} to training data set {} successfully!'.format(
             file_path, data_set_path))
 
 
-def convert_xyz_to_training_data(in_file: str, out_dir: str, atoms_kind=0):
+def convert_xyz_to_init_data(in_file: str, out_dir: str, atoms_kind=0):
     ats = read(in_file, ':')
     force = np.array([np.ravel(at.get_forces()) for at in ats])
     coord = np.array([np.ravel(at.get_positions()) for at in ats])
@@ -62,5 +70,7 @@ def convert_xyz_to_training_data(in_file: str, out_dir: str, atoms_kind=0):
 
 if __name__ == '__main__':
     Fire(dict(
-        add_xyz_to_data_set=add_xyz_to_data_set,
+        convert_xyz_to_init_data=convert_xyz_to_init_data,
+        convert_xyz_to_sys_data=convert_xyz_to_sys_data,
+        add_xyz_to_init_data=add_xyz_to_init_data,
     ))
