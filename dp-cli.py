@@ -16,7 +16,7 @@ def convert_xyz_to_sys_data(in_file: str, out_dir: str):
         write(out_file, atom, sort=True)
 
 
-def add_xyz_to_init_data(in_files: Union[str, list], data_set_dir: str, atoms_kind=0):
+def add_xyz_to_init_data_set(in_files: Union[str, list], data_set_dir: str, atoms_kind=0):
 
     if isinstance(in_files, str):
         in_files = [in_files]
@@ -72,5 +72,5 @@ if __name__ == '__main__':
     Fire(dict(
         convert_xyz_to_init_data=convert_xyz_to_init_data,
         convert_xyz_to_sys_data=convert_xyz_to_sys_data,
-        add_xyz_to_init_data=add_xyz_to_init_data,
+        add_xyz_to_init_data_set=add_xyz_to_init_data_set,
     ))
